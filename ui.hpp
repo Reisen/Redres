@@ -4,19 +4,22 @@
 #include <wx/wx.h>
 #include <vector>
 #include <string>
+#include <memory>
 using std::string;
 using std::vector;
+using std::unique_ptr;
 
 enum class State
 { SERVICE
 , USERNAME
 };
 
-class Generator : public wxFrame
-{ public:
+class Generator : public wxFrame {
+  public:
   Generator();
   void RenderCompletions(wxPaintDC& dc, string input, vector<string> const& completions);
   virtual void OnPaint(wxPaintEvent& event);
+  virtual void OnKeyPress(wxKeyEvent& event);
 
   protected:
   DECLARE_EVENT_TABLE()
@@ -30,11 +33,13 @@ class Generator : public wxFrame
   };
 };
 
-class Redres : public wxApp
-{ public:
+class Redres : public wxApp {
+  public:
   Redres();
-
   virtual bool OnInit();
+
+  private:
+  unique_ptr<Generator> generator;
 };
 
 #endif

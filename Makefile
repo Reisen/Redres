@@ -4,5 +4,12 @@ CXXFLAGS := -std=c++14 -Wall -Werror $(shell wx-config --cxxflags)
 CPPFLAGS :=
 OBJS     := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 
-build: $(OBJS)
+.PHONY: build
+build: clean $(OBJS)
 	g++ $(OBJS) $(LDFLAGS) -o redres
+
+.PHONY: clean
+clean:
+	-rm *.o
+	-rm redres
+

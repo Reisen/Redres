@@ -59,16 +59,25 @@ Generator::RenderCompletions(wxPaintDC& dc, string input, vector<string> const& 
 void
 Generator::OnPaint(wxPaintEvent& event) {
   wxPaintDC dc{this};
-  string input{"Fbb"};
-  vector<string> completions {
-    "Foobarbaz",
-    "What the hell man",
-    "Amazingly Amazing"
+  vector<string> completions
+  { "Foobarbaz"
+  , "What the hell man"
+  , "Amazingly Amazing"
   };
+
+  auto input = (state == State::SERVICE)
+    ? this->service
+    : this->username;
 
   this->RenderCompletions(dc, input, completions);
 }
 
+void
+Generator::OnKeyPress(wxKeyEvent& event) {
+    __builtin_printf("Keydown!\n");
+}
+
 BEGIN_EVENT_TABLE(Generator, wxFrame)
   EVT_PAINT(Generator::OnPaint)
+  EVT_CHAR(Generator::OnKeyPress)
 END_EVENT_TABLE()

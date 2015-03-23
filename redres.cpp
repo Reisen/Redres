@@ -7,9 +7,10 @@ Redres::Redres()
 }
 
 bool
-Redres::OnInit()
-{ auto window = new Generator();
-  window->Show(true);
+Redres::OnInit() {
+  unique_ptr<Generator> generator{new Generator()};
+  this->generator = std::move(generator);
+  this->generator->Show(true);
 
   return true;
 }
