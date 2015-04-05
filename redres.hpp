@@ -1,7 +1,7 @@
 #ifndef REDRES
 #define REDRES
 
-#include "ui.hpp"
+#include "ui/ui.hpp"
 
 class Redres : public wxApp {
     public:
