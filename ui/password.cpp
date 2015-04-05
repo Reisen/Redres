@@ -64,21 +64,36 @@ PasswordPanel::OnPaint(wxPaintEvent& event) {
         ? this->service
         : this->username;
 
+    __builtin_printf("Nice");
     this->RenderCompletions(dc, input, completions);
 }
 
 void
 PasswordPanel::OnKeyPress(wxKeyEvent& event) {
+    // Get Typed Key. See GetUnicodeKey docs on wxWidgets docs for why this is
+    // used instead of GetKeyCode.
     auto key = event.GetUnicodeKey();
     if(key == WXK_NONE) {
         return;
     }
 
-    ((state == State::SERVICE)
+    // Choose the right string to append to.
+    auto &target = (state == State::SERVICE)
         ? this->service
-        : this->username).push_back(key);
+        : this->username;
 
-    __builtin_printf("Keydown %c!\n", key);
+    // Switch States if enter is pressed.
+    if(key == WXK_RETURN) {
+        this->state = State::USERNAME;
+    } else if(key == WXK_BACK) {
+        target.pop_back();
+    } else {
+        // Append Character
+        target.push_back(key);
+        __builtin_printf("Keydown %c!\n", key);
+    }
+
+    // Refresh UI to display the current state.
     this->Refresh();
 }
 
