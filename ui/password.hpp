@@ -31,9 +31,19 @@ class PasswordPanel : public wxPanel {
     State   state = State::SERVICE;
     string  service = "";
     string  username = "";
-    wxBrush cursor {
-        wxColour{255, 190, 0}
-    };
+
+    // UI Components
+    wxBrush cursor     { wxColour{255, 190, 0} };
+    wxBrush suggestion { wxColour{20, 20, 20} };
+    wxFont  font
+        { 10                        // Pixel Size
+        , wxFONTFAMILY_TELETYPE     // Font Family (Monospace)
+        , wxFONTSTYLE_NORMAL        // Font Style
+        , wxFONTWEIGHT_NORMAL       // Font Weight
+        , false                     // Underlined
+        , "Consolas"                // Font Face
+        , wxFONTENCODING_DEFAULT    // Font Encoding
+        };
 };
 
 #endif

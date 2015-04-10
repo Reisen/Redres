@@ -15,25 +15,49 @@ PasswordPanel::PasswordPanel(wxWindow* window)
 
 void
 PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> const& completions) {
-    const auto char_width = 13;
+    // Constants
+    const auto font_size = this->font.GetPixelSize();
+    const auto char_width = 12;
+    const auto char_height = 22;
+    const auto offset_x = (char_width - font_size.GetWidth()) / 2;
+    const auto offset_y = (char_height - font_size.GetHeight()) / 2;
+
+    // Set DC features.
+    wxPen highlight { wxColour{50, 150, 255} };
+    dc.SetBrush(this->suggestion);
+    dc.SetFont(this->font);
+    dc.SetPen(highlight);
+    dc.SetTextForeground(*wxLIGHT_GREY);
 
     // Render the cursor position.
-    dc.SetBrush(this->cursor);
     dc.DrawRectangle(
         wxRect
-            { static_cast<int>(5 + char_width * input.length())
+            { static_cast<int>(5 + input.length() * (char_width + 2))
             , 5
             , char_width
-            , 22
+            , char_height
             }
     );
 
     // Render the input string.
+    dc.SetPen(wxNullPen);
+    dc.SetBrush(this->suggestion);
     for(unsigned i = 0; i < input.length(); ++i) {
+        // Render a box around each character.
+        dc.DrawRectangle(
+            wxRect
+                { static_cast<int>(5 + i * (char_width + 2))
+                , 5
+                , char_width
+                , char_height
+                }
+        );
+
+        // Render the character itself.
         dc.DrawText
             ( string{input[i]}
-            , static_cast<int>(5 + (char_width * i))
-            , 5
+            , static_cast<int>(5 + offset_x + i * (char_width + 2))
+            , 5 + offset_y
             );
     }
 
@@ -47,6 +71,7 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
 
         if(matching) {
             printf("Matched: %s\n", completion.c_str());
+            break;
         }
     }
 }
@@ -64,7 +89,6 @@ PasswordPanel::OnPaint(wxPaintEvent& event) {
         ? this->service
         : this->username;
 
-    __builtin_printf("Nice");
     this->RenderCompletions(dc, input, completions);
 }
 
@@ -84,11 +108,15 @@ PasswordPanel::OnKeyPress(wxKeyEvent& event) {
 
     // Switch States if enter is pressed.
     if(key == WXK_RETURN) {
+        // Switch States.
         this->state = State::USERNAME;
     } else if(key == WXK_BACK) {
-        target.pop_back();
+        // Remove Character.
+        if(target.length() > 0) {
+            target.pop_back();
+        }
     } else {
-        // Append Character
+        // Append Character.
         target.push_back(key);
         __builtin_printf("Keydown %c!\n", key);
     }

@@ -6,7 +6,7 @@ Generator::Generator()
         , wxID_ANY
         , "PassPanel"
         , wxDefaultPosition
-        , wxSize{300, 32}
+        , wxSize{498, 32}
         , wxNO_BORDER
         }
 {
