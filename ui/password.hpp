@@ -37,7 +37,7 @@ class PasswordPanel : public wxPanel {
         , wxFONTSTYLE_NORMAL        // Font Style
         , wxFONTWEIGHT_NORMAL       // Font Weight
         , false                     // Underlined
-        , "Terminus"                // Font Face
+        , "Inconsolata"                // Font Face
         , wxFONTENCODING_DEFAULT    // Font Encoding
         };
 };
