@@ -17,8 +17,9 @@ void
 PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> const& completions) {
     // Constants
     const auto font_size = this->font.GetPixelSize();
-    const auto char_width = 12;
-    const auto char_height = 22;
+    const auto char_spacing = 2;
+    const auto char_width = 14;
+    const auto char_height = 26;
     const auto offset_x = (char_width - font_size.GetWidth()) / 2;
     const auto offset_y = (char_height - font_size.GetHeight()) / 2;
 
@@ -27,13 +28,13 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
     dc.SetBrush(this->suggestion);
     dc.SetFont(this->font);
     dc.SetPen(highlight);
-    dc.SetTextForeground(*wxLIGHT_GREY);
+    dc.SetTextForeground(wxColour{255, 100, 100});
 
     // Render the cursor position.
     dc.DrawRectangle(
         wxRect
-            { static_cast<int>(5 + input.length() * (char_width + 2))
-            , 5
+            { static_cast<int>(3 + input.length() * (char_width + char_spacing))
+            , 3
             , char_width
             , char_height
             }
@@ -46,8 +47,8 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
         // Render a box around each character.
         dc.DrawRectangle(
             wxRect
-                { static_cast<int>(5 + i * (char_width + 2))
-                , 5
+                { static_cast<int>(3 + i * (char_width + char_spacing))
+                , 3
                 , char_width
                 , char_height
                 }
@@ -56,21 +57,53 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
         // Render the character itself.
         dc.DrawText
             ( string{input[i]}
-            , static_cast<int>(5 + offset_x + i * (char_width + 2))
-            , 5 + offset_y
+            , static_cast<int>(3 + offset_x + i * (char_width + char_spacing))
+            , 3 + offset_y
             );
     }
 
     // Render first matching completion.
     for(auto &completion : completions) {
-        auto position = completion.begin();
+        // Check if this completion matches.
         bool matching = all_of(input.begin(), input.end(), [&](char c) {
-            position = find(completion.begin(), completion.end(), c);
-            return !(position == completion.end());
+            return completion.end() != find_if
+                ( completion.begin()
+                , completion.end()
+                , [&](char d) {
+                    return tolower(d) == tolower(c);
+                });
         });
 
+        // It does. Render it.
         if(matching) {
             printf("Matched: %s\n", completion.c_str());
+
+            auto position = input.begin();
+            for(unsigned i = 0; i < completion.length(); ++i) {
+                // Check if this is an input character.
+                dc.SetTextForeground(*wxLIGHT_GREY);
+                if(tolower(*position) == tolower(completion[i])) {
+                    position++;
+                    dc.SetTextForeground(wxColour{50, 110, 250});
+                }
+
+                // Render a box around each character.
+                dc.DrawRectangle(
+                    wxRect
+                        { static_cast<int>(3 + i * (char_width + char_spacing))
+                        , 3
+                        , char_width
+                        , char_height
+                        }
+                );
+
+                // Render the character itself.
+                dc.DrawText
+                    ( string{completion[i]}
+                    , static_cast<int>(3 + offset_x + i * (char_width + char_spacing))
+                    , 3 + offset_y
+                    );
+            }
             break;
         }
     }

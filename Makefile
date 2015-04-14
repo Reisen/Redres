@@ -10,6 +10,6 @@ build: $(OBJS)
 
 .PHONY: clean
 clean:
-	-rm *.o
+	-find ./ -name "*.o" -exec rm {} \;
 	-rm redres
 

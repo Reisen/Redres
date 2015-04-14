@@ -2,10 +2,6 @@
 #define REDRES_PASSWORD_PANEL
 
 #include <wx/wx.h>
-#include <vector>
-#include <string>
-#include <memory>
-#include <algorithm>
 
 using std::string;
 using std::vector;
@@ -36,12 +32,12 @@ class PasswordPanel : public wxPanel {
     wxBrush cursor     { wxColour{255, 190, 0} };
     wxBrush suggestion { wxColour{20, 20, 20} };
     wxFont  font
-        { 10                        // Pixel Size
+        { 9                         // Pixel Size
         , wxFONTFAMILY_TELETYPE     // Font Family (Monospace)
         , wxFONTSTYLE_NORMAL        // Font Style
         , wxFONTWEIGHT_NORMAL       // Font Weight
         , false                     // Underlined
-        , "Consolas"                // Font Face
+        , "Terminus"                // Font Face
         , wxFONTENCODING_DEFAULT    // Font Encoding
         };
 };
