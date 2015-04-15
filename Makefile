@@ -1,6 +1,6 @@
 LDFLAGS  := $(shell wx-config --libs)
 CXXFLAGS := -std=c++14 -Wall -Werror $(shell wx-config --cxxflags)
-CPPFLAGS :=
+CPPFLAGS := -I. -L.
 OBJS     := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 OBJS     += $(patsubst %.cpp, %.o, $(wildcard ui/*.cpp))
 

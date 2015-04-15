@@ -24,9 +24,9 @@ class PasswordPanel : public wxPanel {
 
     private:
     // State Components
-    State   state = State::SERVICE;
-    string  service = "";
-    string  username = "";
+    State  state = State::SERVICE;
+    string service = "";
+    string username = "";
 
     // UI Components
     wxBrush cursor     { wxColour{255, 190, 0} };

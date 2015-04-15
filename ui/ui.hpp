@@ -7,6 +7,10 @@
 #include <memory>
 #include <algorithm>
 
+// Tipos de Infierno
+#include <types/password.hpp>
+
+// UI
 #include "password.hpp"
 #include "generator.hpp"
 
