@@ -23,12 +23,12 @@ class PasswordPanel : public wxPanel {
     DECLARE_EVENT_TABLE()
 
     private:
-    // State Components
+    // Estado
     State  state = State::SERVICE;
     string service = "";
     string username = "";
 
-    // UI Components
+    // UI Estado
     wxBrush cursor     { wxColour{255, 190, 0} };
     wxBrush suggestion { wxColour{20, 20, 20} };
     wxFont  font
@@ -37,7 +37,7 @@ class PasswordPanel : public wxPanel {
         , wxFONTSTYLE_NORMAL        // Font Style
         , wxFONTWEIGHT_NORMAL       // Font Weight
         , false                     // Underlined
-        , "Inconsolata"                // Font Face
+        , "Inconsolata"             // Font Face
         , wxFONTENCODING_DEFAULT    // Font Encoding
         };
 };

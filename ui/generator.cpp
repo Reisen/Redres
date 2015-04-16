@@ -10,12 +10,12 @@ Generator::Generator()
         , wxNO_BORDER
         }
 {
-    // Add Subcomponents
+    // Anadir las componentes.
     unique_ptr<PasswordPanel> panel{new PasswordPanel(this)};
     this->panel = std::move(panel);
     this->panel->SetBackgroundColour(wxColour{30, 30, 30});
 
-    // Display Window
+    // Mostrar las ventanas.
     this->Center();
     this->Show();
 }

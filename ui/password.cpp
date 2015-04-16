@@ -15,7 +15,8 @@ PasswordPanel::PasswordPanel(wxWindow* window)
 
 void
 PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> const& completions) {
-    // Constants
+    // Las constantes. Cambia esetos si tu quieres a cambiar el visualizacion
+    // del mensaje.
     const auto font_size = this->font.GetPixelSize();
     const auto char_spacing = 2;
     const auto char_width = 14;
@@ -23,14 +24,14 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
     const auto offset_x = (char_width - font_size.GetWidth()) / 2;
     const auto offset_y = (char_height - font_size.GetHeight()) / 2;
 
-    // Set DC features.
+    // Aqui nosotros la propiedades de la DC.
     wxPen highlight { wxColour{50, 150, 255} };
     dc.SetBrush(this->suggestion);
     dc.SetFont(this->font);
     dc.SetPen(highlight);
     dc.SetTextForeground(wxColour{255, 100, 100});
 
-    // Render the cursor position.
+    // Mostrar la posicion de la puntero.
     dc.DrawRectangle(
         wxRect
             { static_cast<int>(3 + input.length() * (char_width + char_spacing))
@@ -40,7 +41,7 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
             }
     );
 
-    // Render the input string.
+    // El mensaje que el usario a entrado debe ser mostrado.
     dc.SetPen(wxNullPen);
     dc.SetBrush(this->suggestion);
     for(unsigned i = 0; i < input.length(); ++i) {
@@ -54,7 +55,7 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
                 }
         );
 
-        // Render the character itself.
+        // Mostrar una carta.
         dc.DrawText
             ( string{input[i]}
             , static_cast<int>(3 + offset_x + i * (char_width + char_spacing))
@@ -62,9 +63,8 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
             );
     }
 
-    // Render first matching completion.
+    // Encontrar una conclusion, luego mostrarlo.
     for(auto &completion : completions) {
-        // Check if this completion matches.
         bool matching = all_of(input.begin(), input.end(), [&](char c) {
             return completion.end() != find_if
                 ( completion.begin()
@@ -74,20 +74,20 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
                 });
         });
 
-        // It does. Render it.
+        // Si nos encontramos una conclusion que coincide luego mostrarlo.
         if(matching) {
             printf("Matched: %s\n", completion.c_str());
 
             auto position = input.begin();
             for(unsigned i = 0; i < completion.length(); ++i) {
-                // Check if this is an input character.
+                // Si una carta esta en la frase, cambiar la color.
                 dc.SetTextForeground(*wxLIGHT_GREY);
                 if(tolower(*position) == tolower(completion[i])) {
                     position++;
                     dc.SetTextForeground(wxColour{50, 110, 250});
                 }
 
-                // Render a box around each character.
+                // Mostrar una caja.
                 dc.DrawRectangle(
                     wxRect
                         { static_cast<int>(3 + i * (char_width + char_spacing))
@@ -97,7 +97,7 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
                         }
                 );
 
-                // Render the character itself.
+                // Mostrar la carta.
                 dc.DrawText
                     ( string{completion[i]}
                     , static_cast<int>(3 + offset_x + i * (char_width + char_spacing))
