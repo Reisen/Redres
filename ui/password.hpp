@@ -2,6 +2,11 @@
 #define REDRES_PASSWORD_PANEL
 
 #include <wx/wx.h>
+#include <string>
+#include <vector>
+#include <memory>
+#include <fstream>
+#include "../types/password.hpp"
 
 using std::string;
 using std::vector;
@@ -27,6 +32,7 @@ class PasswordPanel : public wxPanel {
     State  state = State::SERVICE;
     string service = "";
     string username = "";
+    vector<Password> passwords;
 
     // UI Estado
     wxBrush cursor     { wxColour{255, 190, 0} };

@@ -1,4 +1,8 @@
+#include <sstream>
 #include "ui.hpp"
+
+using std::string;
+using std::vector;
 using std::find;
 using std::all_of;
 
@@ -11,6 +15,32 @@ PasswordPanel::PasswordPanel(wxWindow* window)
         , wxTAB_TRAVERSAL
         }
 {
+    using std::getline;
+    using std::ifstream;
+    using std::istringstream;
+
+    string entry;
+    ifstream database("db");
+    while(getline(database, entry)) {
+        istringstream line(entry);
+
+        string service;
+        string username;
+        string changes;
+        string length;
+        getline(line, service, '\0');
+        getline(line, username, '\0');
+        getline(line, changes, '\0');
+        getline(line, length, '\0');
+
+        this->passwords.push_back(Password
+            ( service
+            , username
+            , std::stoi(changes)
+            , std::stoi(length)
+            )
+        );
+    }
 }
 
 void

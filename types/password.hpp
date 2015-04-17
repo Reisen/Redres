@@ -1,5 +1,8 @@
 #ifndef REDRES_TYPE_PASSWORD
-#define REDRED_TYPE_PASSWORD
+#define REDRES_TYPE_PASSWORD
+
+#include <string>
+#include <algorithm>
 
 using std::string;
 
@@ -17,15 +20,17 @@ class Password {
         };
 
     Password();
+    Password(Password &&);
     Password(Password const&) = delete;
-    Password(Password &&) = delete;
+    Password(string, string, uint32_t, uint32_t);
+    ~Password();
 
     private:
-    std::string service = "";
-    std::string username = "";
-    std::string changes = 0;
-    std::string length = 0;
-    Encoding    encoding = Encoding::Ascii85;
+    Encoding encoding = Encoding::Ascii85;
+    string service = "";
+    string username = "";
+    uint32_t changes = 0;
+    uint32_t length = 0;
 };
 
 #endif
