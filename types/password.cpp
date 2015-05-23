@@ -15,9 +15,6 @@ scrub(string& s) {
     }
 }
 
-Password::Password() {
-}
-
 Password::Password(Password&& o) {
     using std::swap;
     swap(this->service, o.service);
@@ -37,4 +34,14 @@ Password::Password(string service, string username, uint32_t changes, uint32_t l
 Password::~Password() {
     scrub(this->service);
     scrub(this->username);
+}
+
+string const&
+Password::freeze_service() const {
+    return this->service;
+}
+
+string const&
+Password::freeze_username() const {
+    return this->username;
 }

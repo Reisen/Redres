@@ -5,6 +5,8 @@ using std::string;
 using std::vector;
 using std::find;
 using std::all_of;
+using std::none_of;
+using std::reference_wrapper;
 
 PasswordPanel::PasswordPanel(wxWindow* window)
     : wxPanel
@@ -33,9 +35,17 @@ PasswordPanel::PasswordPanel(wxWindow* window)
         getline(line, changes, '\0');
         getline(line, length, '\0');
 
+        __builtin_printf
+            ( "Parsed: Password<(%s, %s, %s, %s)>\n"
+            , service.c_str()
+            , username.c_str()
+            , changes.c_str()
+            , length.c_str()
+            );
+
         this->passwords.push_back(Password
-            ( service
-            , username
+            ( std::move(service)
+            , std::move(username)
             , std::stoi(changes)
             , std::stoi(length)
             )
@@ -44,7 +54,7 @@ PasswordPanel::PasswordPanel(wxWindow* window)
 }
 
 void
-PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> const& completions) {
+PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<reference_wrapper<const string>> const& completions) {
     // Las constantes. Cambia esetos si tu quieres a cambiar el visualizacion
     // del mensaje.
     const auto font_size = this->font.GetPixelSize();
@@ -94,7 +104,7 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
     }
 
     // Encontrar una conclusion, luego mostrarlo.
-    for(auto &completion : completions) {
+    for(string const& completion : completions) {
         bool matching = all_of(input.begin(), input.end(), [&](char c) {
             return completion.end() != find_if
                 ( completion.begin()
@@ -134,6 +144,7 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
                     , 3 + offset_y
                     );
             }
+
             break;
         }
     }
@@ -142,17 +153,36 @@ PasswordPanel::RenderCompletions(wxPaintDC& dc, string input, vector<string> con
 void
 PasswordPanel::OnPaint(wxPaintEvent& event) {
     wxPaintDC dc{this};
-    vector<string> completions
-        { "Foobarbaz"
-        , "What the hell man"
-        , "Amazingly Amazing"
-        };
+    vector<reference_wrapper<const string>> completions;
 
-    auto input = (state == State::SERVICE)
-        ? this->service
-        : this->username;
+    for(auto &p : this->passwords) {
+        if(state == State::SERVICE) {
+            if(none_of(completions.begin(), completions.end(), [&](string const& s) { return s == p.freeze_service(); })) {
+                completions.push_back(p.freeze_service());
+            }
+        }
 
-    this->RenderCompletions(dc, input, completions);
+        if(state == State::USERNAME) {
+            bool matching = all_of(this->service.begin(), this->service.end(), [&](char c) {
+                return p.freeze_service().end() != find_if
+                    ( p.freeze_service().begin()
+                    , p.freeze_service().end()
+                    , [&](char d) {
+                        return tolower(d) == tolower(c);
+                    });
+            });
+
+            if(matching) {
+                completions.push_back(p.freeze_username());
+            }
+        }
+    }
+
+    this->RenderCompletions
+        ( dc
+        , (state == State::SERVICE) ? this->service : this->username
+        , completions
+        );
 }
 
 void

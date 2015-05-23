@@ -1,6 +1,6 @@
 #include "redres.hpp"
 
-IMPLEMENT_APP(Redres);
+IMPLEMENT_APP(Redres)
 
 Redres::Redres() {
 }

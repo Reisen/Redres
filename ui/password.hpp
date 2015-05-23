@@ -11,6 +11,7 @@
 using std::string;
 using std::vector;
 using std::unique_ptr;
+using std::reference_wrapper;
 
 enum class State
     { SERVICE
@@ -20,7 +21,7 @@ enum class State
 class PasswordPanel : public wxPanel {
     public:
     PasswordPanel(wxWindow* window);
-    void RenderCompletions(wxPaintDC& dc, string input, vector<string> const& completions);
+    void RenderCompletions(wxPaintDC& dc, string input, vector<reference_wrapper<const string>> const& completions);
     virtual void OnPaint(wxPaintEvent& event);
     virtual void OnKeyPress(wxKeyEvent& event);
 
@@ -29,7 +30,7 @@ class PasswordPanel : public wxPanel {
 
     private:
     // Estado
-    State  state = State::SERVICE;
+    State state = State::SERVICE;
     string service = "";
     string username = "";
     vector<Password> passwords;
@@ -37,7 +38,7 @@ class PasswordPanel : public wxPanel {
     // UI Estado
     wxBrush cursor     { wxColour{255, 190, 0} };
     wxBrush suggestion { wxColour{20, 20, 20} };
-    wxFont  font
+    wxFont font
         { 9                         // Pixel Size
         , wxFONTFAMILY_TELETYPE     // Font Family (Monospace)
         , wxFONTSTYLE_NORMAL        // Font Style

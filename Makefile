@@ -1,5 +1,5 @@
 LDFLAGS  := $(shell wx-config --libs)
-CXXFLAGS := -std=c++14 -Wall -Werror $(shell wx-config --cxxflags)
+CXXFLAGS := -std=c++14 -Wall -Werror $(shell wx-config --cxxflags) -Wno-deprecated-declarations
 CPPFLAGS := -I. -L.
 OBJS     := $(patsubst %.cpp, %.o, $(wildcard *.cpp))
 OBJS     += $(patsubst %.cpp, %.o, $(wildcard ui/*.cpp))
@@ -13,4 +13,3 @@ build: $(OBJS)
 clean:
 	-find ./ -name "*.o" -exec rm {} \;
 	-rm redres
-
